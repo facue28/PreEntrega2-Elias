@@ -99,13 +99,18 @@ const productoElegido = (opcion) => {
     carrito.push(productoElegido);
 
     const cantidad = parseInt(prompt("Ingrese la cantidad deseada:"));
-
+    if (cantidad != 0 ){  ///PRUEBA
     const cantidadProducto = carrito[carrito.length - 1];
     cantidadProducto.precio = cantidadProducto.precio * cantidad;
-    alert("Producto agregado al carrito.");
+    alert("Producto agregado al carrito.");    
+        } else {                                
+            alert ("Opcion incorrecta")         
+        }
     } 
     vistaProductos.splice(0,vistaProductos.length);
 }
+
+
 
 const verProductos = () => {
     let opcion;
