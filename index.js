@@ -1,4 +1,4 @@
-const OPCION_SALIR = 6;
+const OPCION_SALIR = 7;
 
 const productosDisponibles = [
     {
@@ -76,13 +76,13 @@ const productosDisponibles = [
     
 ]
 
-const carrito = []
-
+const carrito = [];
+let total = 0;
 
 
 const vistaProductos = []
 
-const verProductos = (opcion) => {
+const productoElegido = (opcion) => {
     let mensaje = "Productos: \n";
     productosDisponibles.forEach(el =>{
         if(el.categoria === opcion) {
@@ -94,65 +94,134 @@ const verProductos = (opcion) => {
     })
     let producto = parseInt(prompt("Ingrese id del producto \n" + mensaje + " Volver" ))
     if (vistaProductos.find(el => el.id === producto)){
+
     const productoElegido = vistaProductos.find(el => el.id === producto);
     carrito.push(productoElegido);
+
     const cantidad = parseInt(prompt("Ingrese la cantidad deseada:"));
+
     const cantidadProducto = carrito[carrito.length - 1];
     cantidadProducto.precio = cantidadProducto.precio * cantidad;
     alert("Producto agregado al carrito.");
-    } else {
-        alert ("Id Invalido")
-    }
+    } 
     vistaProductos.splice(0,vistaProductos.length);
 }
 
+const verProductos = () => {
+    let opcion;
+    opcion = parseInt(prompt("Elige la categoria: \n 1- Dulces \n 2- Pastas \n 3- Congelados \n 4-Panificacion  \n 5 - Modificar carrito \n 6- Ver carrito \n 7 - Volver al menu principal"))
+    while (opcion !== OPCION_SALIR){
+        switch(opcion){
+            case 1:
+                productoElegido("dulces");
+                break;
+            case 2:
+                productoElegido("pastas");
+                break;
+            case 3:
+                productoElegido("congelados");
+                break;
+            case 4:
+                productoElegido("panificacion");
+                break;
+            case 5:
+                modificarCarrito(); 
+                break;
+            case 6:
+                verCarrito();
+            default:
+                break;
+            
+        }
+        opcion = parseInt(prompt("Elige la categoria: \n 1- Dulces \n 2- Pastas \n 3- Congelados \n 4-Panificacion  \n 5 - Modificar carrito \n 6- Ver carrito \n 7 - Volver al menu principal"))
+
+    }
+}
 
 
+// }
 const verCarrito = () => {
     mensaje = "Productos elegidos: \n";
     carrito.forEach(el =>{
-        mensaje += `${el.nombre} - ${el.precio} \n`;
+        mensaje += `${el.id} -${el.nombre} - ${el.precio} \n`;
     })
-    
-    const total = carrito.reduce((acumulador,producto)=> acumulador + producto.precio,0)
-    
-    alert (mensaje + `\nTotal: ${total}`) 
+    total = carrito.reduce((acumulador,producto)=> acumulador + producto.precio,0)
+    alert (mensaje + `\n Total: ${total}`) 
+
 }
 
+const modificarCarrito = () => {
+    let opcionEliminar = prompt("Desea eliminar un producto? \n Ingrese (SI/NO)");
+
+    if (opcionEliminar.toLocaleUpperCase() === "SI") {
+        mensaje = "Productos elegidos: \n";
+        carrito.forEach((el) => {
+            mensaje += `${el.id} -${el.nombre} - ${el.precio} \n`;
+        });
+        idObj = parseInt(prompt("Ingrese Id del producto a eliminar \n" + mensaje));
+        indexObj = carrito.findIndex(el => el.id === idObj);
+        if (indexObj != -1) {
+            carrito.splice(indexObj, 1);
+                alert("Producto eliminado.");
+        } else {
+            alert("Id incorrecto");
+        }
+    } else {
+        alert("Presione enter para volver");
+    }
+};
+
+
+const pagar = () => {
+    let opcion;
+    opcion = parseInt(prompt("Elige metodo de pago :\n 1 - (1) Cuota  \n 2 - (2) Cuotas \n 3 - (3) Cuotas \n 4 - Efectivo "))
+        switch(opcion){
+            case 1:
+                cuota1 = (total / opcion) * 1.04;
+                alert (`1 cuota de ${cuota1} `)
+                break;
+            case 2:
+                cuota2 = (total / opcion) *   1.06;
+                alert (`2 cuota de ${cuota2} \n Total : ${cuota2*opcion}`)
+                break;
+            case 3:
+                cuota3 = (total / opcion) * 1.10;
+                alert (`3 cuotas de ${cuota3}\n Total : ${cuota3*opcion}`)
+                break;
+            case 4:
+                alert (total)
+                break;
+            default:
+                alert("Ingreso una opcion invalida")
+                break
+        }
+    }
 
 
 // Menu
 
 
-let opcion ;
-opcion = parseInt(prompt("Elige la categoria: \n 1- Dulces \n 2- Pastas \n 3- Congelados \n 4-Panificacion \n 5- Ver carrito de compras \n 6-Salir \n 0- Salir"))
+// let opcion ;
+
+let opcion = parseInt(prompt("Ingrese la opcion deseada: \n 1- Productos \n 2- Ver Carrito \n 3- Pagar \n 7- Salir"))
 
 while (opcion != OPCION_SALIR){
-
-    switch(opcion){
+    switch (opcion) {
         case 1:
-            verProductos("dulces");
+            verProductos();
             break;
         case 2:
-            verProductos("pastas");
-            break;
-        case 3:
-            verProductos("congelados");
-            break;
-        case 4:
-            verProductos("panificacion");
-            break;
-        case 5:
             verCarrito();
             break;
-        default:
-            alert ("Opcion incorrecta")
+        case 3:
+            pagar();
             break;
-        
+        case 7:
+            OPCION_SALIR
+            break;
+        default:
+            alert("Ingreso una opcion invalida")
+            break;
     }
-    opcion = parseInt(prompt("Elige la categoria: \n 1- Dulces \n 2- Pastas \n 3- Congelados \n 4-Panificacion \n 5- Ver carrito de compras \n 6-Salir"))
+    opcion = parseInt(prompt("Ingrese la opcion deseada: \n 1- Productos \n 2- Ver Carrito \n 3- Pagar \n 7- Salir"))
 }
-
-
-
-
